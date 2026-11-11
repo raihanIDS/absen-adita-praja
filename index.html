@@ -3,106 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Absensi Dewan Ambalan Adita Praja (Cloud DB)</title>
-    <!-- Library Supabase Official -->
+    <title>Sistem Absensi Pramuka Adita Praja</title>
+    <!-- Wajib: Panggil Supabase JS di bagian head -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Hubungkan ke file CSS terpisah -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- NAVBAR -->
     <nav id="navbar" style="display: none;">
-        <h2>⚜️ ADITA PRAJA (CLOUD CONNECTED)</h2>
-        <div>
-            <span id="user-info" style="margin-right: 15px; font-weight: bold;"></span>
+        <div class="nav-brand">🏕️ Adita Praja</div>
+        <div class="nav-menu">
+            <span id="user-info">Nama Pengguna</span>
             <button class="btn-logout" onclick="logout()">Keluar</button>
         </div>
     </nav>
 
-    <!-- LOGIN -->
+    <!-- HALAMAN 1: LOGIN -->
     <div id="halaman-login" class="page active-page">
-        <div class="login-box">
-            <h2>⚜️ LOG IN ABSENSI ⚜️<br>Dewan Ambalan Adita Praja</h2>
+        <div class="login-card">
+            <h2>Absensi Pramuka<br>Adita Praja</h2>
+            <p>Silakan masuk menggunakan akun Anda</p>
             <form onsubmit="prosesLogin(event)">
-                <input type="text" id="input-username" placeholder="Username" required>
-                <input type="password" id="input-password" placeholder="Password" required>
-                <button type="submit">MASUK</button>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="input-username" placeholder="cth: kelvin_sutirta" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="input-password" placeholder="Masukkan sandi" required>
+                </div>
+                <button type="submit" class="btn-primary">MASUK</button>
             </form>
         </div>
     </div>
 
-    <!-- DASHBOARD ANGGOTA -->
+    <!-- HALAMAN 2: DASHBOARD ANGGOTA (Kamera & GPS) -->
     <div id="halaman-anggota" class="page">
-        <div class="card">
-            <h3>Selamat Datang, <span id="nama-anggota" style="color: var(--pramuka-green);"></span>!</h3>
-            <div id="status-gps-alert" class="status-gps">⏳ Sedang melacak lokasi GPS...</div>
-
-            <div class="camera-area">
-                <span>📷 Kamera Aktif (Simulasi)</span>
-                <div class="watermark">
-                    <div id="wm-nama">Nama</div>
-                    <div id="wm-waktu">Waktu</div>
-                    <div id="wm-jarak">Jarak: Menghitung...</div>
-                </div>
+        <div class="container">
+            <h3>Selamat Datang, <span id="nama-anggota"></span></h3>
+            
+            <div id="status-gps-alert" class="alert alert-warning">
+                Mencari sinyal GPS... Pastikan izin lokasi aktif.
             </div>
-            <button class="btn-absen" onclick="simpanAbsenCloud()">📸 REKAM ABSENSI SEKARANG</button>
-        </div>
 
-        <div class="card">
-            <h4>Riwayat Absensi Anda (Cloud Saved)</h4>
-            <table>
-                <thead><tr><th>Tanggal & Waktu</th><th>Status & Jarak</th></tr></thead>
-                <tbody id="isi-riwayat-pribadi"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- DASHBOARD ADMIN / PEMANTAU -->
-    <div id="halaman-admin" class="page">
-        <div class="card">
-            <h3>📊 Dashboard Pemantau (Cloud Mode)</h3>
-            <p>Selamat bertugas, Kak <b id="nama-admin" style="color: var(--pramuka-green);"></b>.</p>
-        </div>
-
-        <!-- PENGATURAN RADIUS SANGGAR -->
-        <div class="card" id="pengaturan-radius-card" style="border-left-color: #d32f2f; display: none;">
-            <h4>⚙️ Pengaturan Titik Lokasi Sanggar (Tersimpan Permanen)</h4>
-            <p style="font-size: 0.85rem; color: gray;">Pengaturan ini tersimpan di Database Cloud. Komputer admin dimatikan tidak akan menghapus data ini.</p>
-            <form onsubmit="simpanPengaturanRadiusCloud(event)">
-                <div class="form-grid">
-                    <div>
-                        <label><strong>Latitude Sanggar:</strong></label><br>
-                        <input type="text" id="cfg-lat" step="any" required>
-                    </div>
-                    <div>
-                        <label><strong>Longitude Sanggar:</strong></label><br>
-                        <input type="text" id="cfg-lng" step="any" required>
+            <div class="kamera-container">
+                <!-- Simulasi tampilan kamera -->
+                <div class="kamera-box">
+                    <p style="text-align: center; color: #888; padding: 50px 0;">[ Area Kamera Aktif ]</p>
+                    <div class="watermark">
+                        <div id="wm-nama">Nama</div>
+                        <div id="wm-waktu">Waktu</div>
+                        <div id="wm-jarak">Jarak: - m</div>
                     </div>
                 </div>
-                <div style="margin-top: 10px;">
-                    <label><strong>Batas Maksimal Radius (Meter):</strong></label><br>
-                    <input type="number" id="cfg-radius" min="5" max="1000" class="input-radius" required>
-                </div>
-                <button type="submit" class="btn-simpan-radius">💾 SIMPAN KE DATABASE CLOUD</button>
-            </form>
-        </div>
+                <button class="btn-absen" onclick="simpanAbsenCloud()">📸 REKAM ABSENSI SEKARANG</button>
+            </div>
 
-        <!-- REKAP KEHADIRAN -->
-        <div class="card" style="border-left-color: var(--pramuka-gold);">
-            <h4>📅 Data Kehadiran Harian (Real-Time Cloud)</h4>
-            <label for="filter-tanggal"><strong>Pilih Tanggal:</strong> </label>
-            <input type="date" id="filter-tanggal" class="input-date" onchange="muatDataAbsensiHarianCloud()">
-            <p style="margin-top:15px;">Total Kehadiran: <b id="total-hadir" style="color: var(--pramuka-green); font-size: 1.2rem;">0</b> Anggota</p>
-            <div style="overflow-x: auto;">
-                <table>
-                    <thead><tr><th>Waktu (WIB)</th><th>Nama Anggota</th><th>Jarak Sanggar</th><th>Status</th></tr></thead>
-                    <tbody id="isi-rekap-absen"></tbody>
+            <div class="card mt-2">
+                <h4>Riwayat Absensi Anda</h4>
+                <table class="table">
+                    <thead>
+                        <tr><th>Waktu Absen</th><th>Status</th></tr>
+                    </thead>
+                    <tbody id="isi-riwayat-pribadi">
+                        <tr><td colspan="2" style="text-align:center;">Memuat data...</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Hubungkan ke file JavaScript terpisah -->
+    <!-- HALAMAN 3: DASHBOARD ADMIN & PEMANTAU -->
+    <div id="halaman-admin" class="page">
+        <div class="container">
+            <h3>Dashboard Pemantau: <span id="nama-admin"></span></h3>
+
+            <!-- Pengaturan Radius (Hanya tampil untuk Pradana & Admin) -->
+            <div id="pengaturan-radius-card" class="card" style="display: none;">
+                <h4>⚙️ Pengaturan Titik Kumpul (Sanggar)</h4>
+                <form onsubmit="simpanPengaturanRadiusCloud(event)">
+                    <div class="form-row">
+                        <div><label>Latitude</label><input type="text" id="cfg-lat" required></div>
+                        <div><label>Longitude</label><input type="text" id="cfg-lng" required></div>
+                        <div><label>Maks Radius (m)</label><input type="number" id="cfg-radius" required></div>
+                    </div>
+                    <button type="submit" class="btn-primary mt-1">Simpan Pengaturan</button>
+                </form>
+            </div>
+
+            <!-- Rekap Absen Semua Anggota -->
+            <div class="card mt-2">
+                <h4>📋 Rekap Absensi Harian</h4>
+                <div class="form-group">
+                    <label>Pilih Tanggal:</label>
+                    <input type="date" id="filter-tanggal" onchange="muatDataAbsensiHarianCloud()">
+                </div>
+                <p>Total Hadir: <b id="total-hadir">0</b> Orang</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr><th>Jam</th><th>Nama Lengkap</th><th>Jarak</th><th>Status</th></tr>
+                        </thead>
+                        <tbody id="isi-rekap-absen">
+                            <tr><td colspan="4" style="text-align:center;">Pilih tanggal untuk melihat data.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
