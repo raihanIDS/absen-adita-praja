@@ -2,8 +2,8 @@
 // KONFIGURASI KONEKSI DATABASE SUPABASE
 // ==========================================
 // GANTI DENGAN URL & KEY DARI DASHBOARD SUPABASE ANDA
-const SUPABASE_URL = 'https://xyzabcdefg.supabase.co'; 
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6...'; 
+const SUPABASE_URL = 'https://xmvjtrlktkihutvmpskq.supabase.co/rest/v1/'; 
+const SUPABASE_KEY = 'sb_publishable_h8yiiFdhwDg0yL7l2V5yeg_NXhy4mhr'; 
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // DAFTAR 57 AKUN
