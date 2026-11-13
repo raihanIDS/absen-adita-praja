@@ -1,6 +1,6 @@
 const supabaseUrl = 'https://xmvjtrlktkihutvmpskq.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ...'; // (biarkan key panjang ini utuh sesuai milik Anda)
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // (biarkan teks panjang ini utuh)
+supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 // ==========================================
 // DATA 57 AKUN (Berdasarkan PDF Adita Praja)
 // ==========================================
