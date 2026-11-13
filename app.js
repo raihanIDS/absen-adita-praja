@@ -3,15 +3,71 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // ==========================================
-// DATA AKUN (Tambahkan data lain dengan format yang sama di bawahnya)
+// DATA 57 AKUN (Berdasarkan PDF Adita Praja)
 // ==========================================
 const databaseUsers = [
-    { username: "admin", password: "123", nama_lengkap: "Admin Pemantau", role: "admin" },
-    { username: "kelvin", password: "123", nama_lengkap: "Kelvin Sutirta", role: "anggota" },
-    { username: "budi", password: "123", nama_lengkap: "Budi Santoso", role: "anggota" },
-    { username: "siti", password: "123", nama_lengkap: "Siti Aminah", role: "anggota" },
-    { username: "andi", password: "123", nama_lengkap: "Andi Darmawan", role: "anggota" }
-    // Pastikan menggunakan tanda koma (,) di akhir setiap baris jika ingin menambah data lagi.
+    // 1. Akun Otoritas (Pemantau) -> role: "admin"
+    { username: "admin_adita", password: "admin123", nama_lengkap: "Admin Sistem Web", role: "admin" },
+    { username: "pradana_pa", password: "pramuka2026", nama_lengkap: "Kelvin Sutirta (Pradana Pa)", role: "admin" },
+    { username: "pradana_pi", password: "pramuka2026", nama_lengkap: "Aurell Tatia (Pradana Pi)", role: "admin" },
+    { username: "kerani_pa", password: "pramuka2026", nama_lengkap: "Moch Sigit (Kerani Pa)", role: "admin" },
+    { username: "kerani_pi1", password: "pramuka2026", nama_lengkap: "Nabila Putri (Kerani Pi 1)", role: "admin" },
+    { username: "kerani_pi2", password: "pramuka2026", nama_lengkap: "Selma Janiska (Kerani Pi 2)", role: "admin" },
+
+    // 2. Akun Pribadi Pengurus Harian -> role: "anggota"
+    { username: "kelvin_sutirta", password: "aditapraja", nama_lengkap: "Kelvin Sutirta Augusto W.", role: "anggota" },
+    { username: "aurell_tatia", password: "aditapraja", nama_lengkap: "Aurell Tatia Diva Melody", role: "anggota" },
+    { username: "moch_sigit", password: "aditapraja", nama_lengkap: "Moch Sigit Permadi", role: "anggota" },
+    { username: "nabila_putri", password: "aditapraja", nama_lengkap: "Nabila Putri Refilia", role: "anggota" },
+    { username: "selma_janiska", password: "aditapraja", nama_lengkap: "Selma Janiska Putri", role: "anggota" },
+    { username: "m_rayhan", password: "aditapraja", nama_lengkap: "M. Rayhan Kautsar Adirafa", role: "anggota" },
+    { username: "isma_gita", password: "aditapraja", nama_lengkap: "Isma Gita Aulia", role: "anggota" },
+    { username: "zahra_naila", password: "aditapraja", nama_lengkap: "Zahra Naila Windri", role: "anggota" },
+    { username: "amira_asyabilla", password: "aditapraja", nama_lengkap: "Amira Asyabilla Ramadhani", role: "anggota" },
+    { username: "fradita_aulya", password: "aditapraja", nama_lengkap: "Fradita Aulya", role: "anggota" },
+    { username: "fatich_faiklil", password: "aditapraja", nama_lengkap: "Fatich Faiklil Ramadhani", role: "anggota" },
+    { username: "galuh_lyandhini", password: "aditapraja", nama_lengkap: "Galuh Lyandhini", role: "anggota" },
+
+    // 3. Akun Anggota & Seksi Bidang -> role: "anggota"
+    { username: "tri_cahya", password: "aditapraja", nama_lengkap: "Tri Cahya Mustika", role: "anggota" },
+    { username: "nadia_octavia", password: "aditapraja", nama_lengkap: "Nadia Octavia", role: "anggota" },
+    { username: "khoirotul_aini", password: "aditapraja", nama_lengkap: "Khoirotul Aini", role: "anggota" },
+    { username: "wahyu_oktavia", password: "aditapraja", nama_lengkap: "Wahyu Oktavia", role: "anggota" },
+    { username: "nanda_ayu", password: "aditapraja", nama_lengkap: "Nanda Ayu Pratiwi", role: "anggota" },
+    { username: "juwita_rendrawati", password: "aditapraja", nama_lengkap: "Juwita Rendrawati", role: "anggota" },
+    { username: "rahma_nur", password: "aditapraja", nama_lengkap: "Rahma Nur Aini Ajizah", role: "anggota" },
+    { username: "zahra_aura", password: "aditapraja", nama_lengkap: "Zahra Aura Ma'wa", role: "anggota" },
+    { username: "aliffa_aulia", password: "aditapraja", nama_lengkap: "Aliffa Aulia Putri", role: "anggota" },
+    { username: "dwi_fatma", password: "aditapraja", nama_lengkap: "Dwi Fatma Yanti", role: "anggota" },
+    { username: "siti_fatimah", password: "aditapraja", nama_lengkap: "Siti Fatimah", role: "anggota" },
+    { username: "felina_septiana", password: "aditapraja", nama_lengkap: "Felina Septiana", role: "anggota" },
+    { username: "nayla_priatika", password: "aditapraja", nama_lengkap: "Nayla Priatika", role: "anggota" },
+    { username: "pritha_artha", password: "aditapraja", nama_lengkap: "Pritha Artha Dyah V.", role: "anggota" },
+    { username: "yulia_ayuning", password: "aditapraja", nama_lengkap: "Yulia Ayuning Rahmawati", role: "anggota" },
+    { username: "nurul_qomariyah", password: "aditapraja", nama_lengkap: "Nurul Qomariyah", role: "anggota" },
+    { username: "shalsabilla_safra", password: "aditapraja", nama_lengkap: "Shalsabilla Safra Adzro", role: "anggota" },
+    { username: "aulia_nawal", password: "aditapraja", nama_lengkap: "Aulia Nawal Najwa M.", role: "anggota" },
+    { username: "cherin_azrillia", password: "aditapraja", nama_lengkap: "Cherin Azrillia A. A.", role: "anggota" },
+    { username: "shafa_nabila", password: "aditapraja", nama_lengkap: "Shafa Nabila Eka Putri", role: "anggota" },
+    { username: "carissa_dianita", password: "aditapraja", nama_lengkap: "Carissa Dianita Agiesta", role: "anggota" },
+    { username: "tata_novita", password: "aditapraja", nama_lengkap: "Tata Novita Sari", role: "anggota" },
+    { username: "putri_zahrotus", password: "aditapraja", nama_lengkap: "Putri Zahrotus Syifa", role: "anggota" },
+    { username: "jenian_renata", password: "aditapraja", nama_lengkap: "Jenian Renata Setyowati", role: "anggota" },
+    { username: "dinafi_ardillah", password: "aditapraja", nama_lengkap: "Dinafi Ardillah", role: "anggota" },
+    { username: "shafina_rafeylah", password: "aditapraja", nama_lengkap: "Shafina Rafeylah R.", role: "anggota" },
+    { username: "khoirotun_nisa", password: "aditapraja", nama_lengkap: "Khoirotun Nisa Putri", role: "anggota" },
+    { username: "sri_dwiyanti", password: "aditapraja", nama_lengkap: "Sri Dwiyanti Agustin", role: "anggota" },
+    { username: "sastadiva_lailatul", password: "aditapraja", nama_lengkap: "Sastadiva Lailatul S.", role: "anggota" },
+    { username: "cintya_putri", password: "aditapraja", nama_lengkap: "Cintya Putri Rahayu", role: "anggota" },
+    { username: "nana_wahyuni", password: "aditapraja", nama_lengkap: "Nana Wahyuni Rahayu", role: "anggota" },
+    { username: "anisa_amelia", password: "aditapraja", nama_lengkap: "Anisa Amelia", role: "anggota" },
+    { username: "rohmatul_azizah", password: "aditapraja", nama_lengkap: "Rohmatul Azizah", role: "anggota" },
+    { username: "zakiya_azzahra", password: "aditapraja", nama_lengkap: "Zakiya Azzahra", role: "anggota" },
+    { username: "fika_ramadhani", password: "aditapraja", nama_lengkap: "Fika Ramadhani", role: "anggota" },
+    { username: "putri_meila", password: "aditapraja", nama_lengkap: "Putri Meila Fazsa", role: "anggota" },
+    { username: "wayne_ditya", password: "aditapraja", nama_lengkap: "Wayne Ditya Pratiwi", role: "anggota" },
+    { username: "raras_ngesti", password: "aditapraja", nama_lengkap: "Raras Ngesti Arena", role: "anggota" },
+    { username: "maulida_citra", password: "aditapraja", nama_lengkap: "Maulida Citra Dwi P.", role: "anggota" }
 ];
 
 let userLogin = null;
