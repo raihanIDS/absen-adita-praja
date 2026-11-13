@@ -1,34 +1,27 @@
-/* =========================================
-   1. KONFIGURASI SUPABASE
-   ========================================= */
 const supabaseUrl = 'https://xmvjtrlktkihutvmpskq.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhtdmp0cmxrdGtpaHV0dm1wc2txIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQzMTU1MTAsImV4cCI6MjEwOTg5MTUxMH0.m9rD8UtrL4FrIRsBerdcROouZMK812pJjpoSvTBQEzk';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-/* =========================================
-   2. DATA AKUN PENGGUNA LOKAL 
-   (Tambahkan ke-57 data anggota Anda di sini)
-   ========================================= */
+// ==========================================
+// DATA AKUN (Tambahkan data lain dengan format yang sama di bawahnya)
+// ==========================================
 const databaseUsers = [
     { username: "admin", password: "123", nama_lengkap: "Admin Pemantau", role: "admin" },
-    { username: "kelvin_sutirta", password: "123", nama_lengkap: "Kelvin Sutirta", role: "anggota" },
-    { username: "budi_pramuka", password: "123", nama_lengkap: "Budi Santoso", role: "anggota" }
+    { username: "kelvin", password: "123", nama_lengkap: "Kelvin Sutirta", role: "anggota" },
+    { username: "budi", password: "123", nama_lengkap: "Budi Santoso", role: "anggota" },
+    { username: "siti", password: "123", nama_lengkap: "Siti Aminah", role: "anggota" },
+    { username: "andi", password: "123", nama_lengkap: "Andi Darmawan", role: "anggota" }
+    // Pastikan menggunakan tanda koma (,) di akhir setiap baris jika ingin menambah data lagi.
 ];
 
-/* =========================================
-   3. VARIABEL GLOBAL
-   ========================================= */
 let userLogin = null;
 let currentLat = null;
 let currentLng = null;
 let sanggarLat = 0;
 let sanggarLng = 0;
 let maxRadius = 50;
-let jamInterval; // Untuk menghentikan jam saat logout
+let jamInterval;
 
-/* =========================================
-   4. LOGIKA LOGIN & LOGOUT
-   ========================================= */
 function prosesLogin(event) {
     event.preventDefault();
     const userIn = document.getElementById('input-username').value;
@@ -66,14 +59,11 @@ function logout() {
     document.getElementById('input-username').value = '';
     document.getElementById('input-password').value = '';
     
-    // Matikan kamera
     const video = document.getElementById('kamera-stream');
     if (video && video.srcObject) {
         video.srcObject.getTracks().forEach(track => track.stop());
     }
-    // Matikan jam
     clearInterval(jamInterval);
-    
     tampilkanHalaman('halaman-login');
 }
 
@@ -82,19 +72,14 @@ function tampilkanHalaman(idHalaman) {
     document.getElementById(idHalaman).classList.add('active-page');
 }
 
-/* =========================================
-   5. KAMERA & JAM LIVE
-   ========================================= */
 async function jalankanKamera() {
     const video = document.getElementById('kamera-stream');
     const teksKamera = document.getElementById('teks-kamera');
-
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
         video.srcObject = stream;
         if(teksKamera) teksKamera.style.display = 'none';
     } catch (err) {
-        console.error("Kamera gagal:", err);
         if(teksKamera) teksKamera.innerText = "[ Izin Kamera Ditolak ]";
     }
 }
@@ -111,9 +96,6 @@ function jalankanJamLive() {
     }, 1000);
 }
 
-/* =========================================
-   6. GPS & MENGHITUNG JARAK
-   ========================================= */
 async function ambilLokasiSekarang() {
     const statusGps = document.getElementById('status-gps-alert');
     await muatPengaturanSanggar();
@@ -124,12 +106,11 @@ async function ambilLokasiSekarang() {
                 currentLat = position.coords.latitude;
                 currentLng = position.coords.longitude;
                 const jarak = hitungJarak(currentLat, currentLng, sanggarLat, sanggarLng);
-                
                 document.getElementById('wm-jarak').innerText = `Jarak: ${Math.round(jarak)} m`;
 
                 if (jarak <= maxRadius) {
                     statusGps.className = "alert alert-success";
-                    statusGps.innerHTML = `✅ GPS Sesuai. Jarak: ${Math.round(jarak)} Meter dari Sanggar.`;
+                    statusGps.innerHTML = `✅ GPS Sesuai. Jarak: ${Math.round(jarak)} Meter.`;
                 } else {
                     statusGps.className = "alert alert-warning";
                     statusGps.innerHTML = `⚠️ Jarak terlalu jauh: ${Math.round(jarak)} Meter (Maks ${maxRadius}m).`;
@@ -154,9 +135,6 @@ function hitungJarak(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-/* =========================================
-   7. SIMPAN ABSEN DENGAN FOTO KE SUPABASE
-   ========================================= */
 async function simpanAbsenCloud() {
     if (!currentLat || !currentLng) {
         alert("Tunggu Sinyal GPS / Izin lokasi belum aktif!");
@@ -166,7 +144,6 @@ async function simpanAbsenCloud() {
     const jarak = hitungJarak(currentLat, currentLng, sanggarLat, sanggarLng);
     const statusAbsen = jarak <= maxRadius ? 'Hadir' : 'Di Luar Area';
 
-    // Proses Memotret dari Canvas
     const video = document.getElementById('kamera-stream');
     let fotoBase64 = "";
     
@@ -177,13 +154,11 @@ async function simpanAbsenCloud() {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         fotoBase64 = canvas.toDataURL('image/jpeg', 0.6); 
-    } else {
-        alert("Kamera belum siap atau tidak diizinkan. Absen tetap dilanjutkan tanpa foto.");
     }
 
     const tanggalHariIni = new Date().toISOString().split('T')[0];
 
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from('riwayat_absensi')
         .insert([{
             username: userLogin.username,
@@ -195,17 +170,13 @@ async function simpanAbsenCloud() {
         }]);
 
     if (error) {
-        console.error("Gagal simpan:", error);
         alert("Gagal mengirim absensi ke server.");
     } else {
-        alert("Berhasil! Absensi Anda sudah tersimpan.");
+        alert("Berhasil! Absensi Anda tersimpan.");
         muatRiwayatPribadi();
     }
 }
 
-/* =========================================
-   8. FITUR TAMPILAN ADMIN
-   ========================================= */
 async function muatPengaturanSanggar() {
     const { data, error } = await supabase.from('setting_lokasi').select('*').eq('id', 1).single();
     if (data) {
@@ -238,7 +209,7 @@ async function simpanPengaturanRadiusCloud(event) {
 
 async function muatRiwayatPribadi() {
     const tbody = document.getElementById('isi-riwayat-pribadi');
-    const { data, error } = await supabase
+    const { data } = await supabase
         .from('riwayat_absensi')
         .select('*')
         .eq('username', userLogin.username)
@@ -262,7 +233,7 @@ async function muatDataAbsensiHarianCloud() {
     const tglPilih = document.getElementById('filter-tanggal').value;
     if (!tglPilih) return;
 
-    const { data, error } = await supabase
+    const { data } = await supabase
         .from('riwayat_absensi')
         .select('*')
         .eq('tanggal_absen', tglPilih)
@@ -275,7 +246,6 @@ async function muatDataAbsensiHarianCloud() {
         
         tbody.innerHTML = data.map(absen => {
             const waktu = new Date(absen.waktu_absen).toLocaleTimeString('id-ID');
-            // Logika menampilkan foto
             const elemenFoto = absen.foto_base64 
                 ? `<img src="${absen.foto_base64}" style="width: 50px; border-radius: 5px; cursor: pointer; border: 1px solid #ccc;" onclick="window.open('${absen.foto_base64}')" alt="Foto">` 
                 : '<small style="color:red">Tidak Ada</small>';
