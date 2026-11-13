@@ -2,11 +2,11 @@
    VARIABEL WARNA TEMA ADITA PRAJA
    ========================================= */
 :root {
-    --hijau-dasar: #006600; /* Request: Hijau gelap utama */
-    --kuning-emas: #cc9900; /* Request: Kuning/Emas utama */
-    --hijau-logo: #2E8B57;  /* Hijau terang untuk tombol */
-    --putih-keris: #FFFFFF; /* Warna putih */
-    --hitam-teks: #111111;  /* Warna teks umum */
+    --hijau-dasar: #006600; 
+    --kuning-emas: #cc9900; 
+    --hijau-logo: #2E8B57;  
+    --putih-keris: #FFFFFF; 
+    --hitam-teks: #111111;  
     
     --bg-body: #f4f7f4;
     --bg-card: #FFFFFF;
@@ -19,78 +19,46 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
 body { background-color: var(--bg-body); color: var(--hitam-teks); line-height: 1.6; }
 
-/* =========================================
-   PENGATURAN UKURAN LOGO
-   ========================================= */
-.logo-nav {
-    width: 35px;
-    height: auto;
-    vertical-align: middle;
-    margin-right: 10px;
-    border-radius: 50%;
-}
+/* UKURAN LOGO */
+.logo-nav { width: 35px; height: auto; vertical-align: middle; margin-right: 10px; border-radius: 50%; }
+.logo-login { width: 100px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
 
-.logo-login {
-    width: 100px;
-    height: auto;
-    margin-bottom: 15px;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-}
-
-/* =========================================
-   NAVBAR & HEADER
-   ========================================= */
+/* NAVBAR */
 nav { 
-    background: var(--hijau-dasar); 
-    color: var(--putih-keris); 
-    padding: 15px 5%; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
+    background: var(--hijau-dasar); color: var(--putih-keris); padding: 15px 5%; 
+    display: flex; justify-content: space-between; align-items: center; 
     position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    border-bottom: 3px solid var(--kuning-emas);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 3px solid var(--kuning-emas);
 }
 .nav-brand { font-weight: 800; font-size: 1.3rem; letter-spacing: 1px; color: var(--kuning-emas); display: flex; align-items: center; }
 .nav-brand span { color: var(--putih-keris); }
 .nav-menu { display: flex; align-items: center; gap: 20px; }
 #user-info { font-weight: 600; font-size: 0.9rem; }
 
-/* =========================================
-   TOMBOL (BUTTONS)
-   ========================================= */
+/* TOMBOL */
 button { font-family: inherit; transition: var(--transisi); border: none; cursor: pointer; }
 .btn-logout { background-color: transparent; color: var(--kuning-emas); border: 1px solid var(--kuning-emas); padding: 6px 15px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
 .btn-logout:hover { background-color: var(--kuning-emas); color: var(--hijau-dasar); }
-
 .btn-primary { background-color: var(--hijau-dasar); color: var(--kuning-emas); padding: 12px; border-radius: var(--radius); font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border: 1px solid var(--kuning-emas); }
 .btn-primary:hover { background-color: #004d00; box-shadow: 0 5px 15px rgba(0, 102, 0, 0.4); transform: translateY(-2px); }
-
 .btn-absen { width: 100%; background-color: var(--hijau-logo); color: var(--putih-keris); padding: 18px; border-radius: var(--radius); font-size: 1.1rem; font-weight: 800; margin-top: 15px; box-shadow: 0 4px 15px rgba(46, 139, 87, 0.4); border: 2px solid var(--putih-keris); display: flex; justify-content: center; align-items: center; gap: 10px; }
 .btn-absen:hover { background-color: var(--hijau-dasar); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 102, 0, 0.5); }
 .w-100 { width: 100%; }
 
-/* =========================================
-   LAYOUT & STRUKTUR (MODE DESKTOP & PONSEL)
-   ========================================= */
+/* LAYOUT */
 .page { display: none; animation: fadeIn 0.4s ease-out; }
 .active-page { display: block; }
 .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Grid Dasar (Ponsel - 1 Kolom ke bawah) */
 .main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 .admin-grid { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
-
-/* Mode Desktop (Layar lebar - 2 Kolom) */
 @media (min-width: 850px) {
     .main-grid { grid-template-columns: 1.2fr 1fr; }
     .admin-grid { grid-template-columns: 350px 1fr; }
 }
 
-/* =========================================
-   KARTU (CARDS)
-   ========================================= */
+/* KARTU */
 .card { background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow-halus); overflow: hidden; border: 1px solid #e0e0e0; transition: var(--transisi); }
 .card:hover { box-shadow: 0 12px 30px rgba(0, 102, 0, 0.2); border-color: var(--kuning-emas); }
 .card-header { background: #fafafa; padding: 15px 25px; border-bottom: 2px solid var(--hijau-dasar); }
@@ -98,64 +66,36 @@ button { font-family: inherit; transition: var(--transisi); border: none; cursor
 .card-body { padding: 25px; }
 .p-0 .card-body { padding: 20px; }
 
-/* =========================================
-   HALAMAN LOGIN (REQUESTED FLOAT COLOR)
-   ========================================= */
+/* HALAMAN LOGIN */
 .login-wrapper { 
-    display: flex; justify-content: center; align-items: center; min-height: 100vh; 
-    background-color: #000;
-    /* Menggunakan logo sebagai latar belakang samar di halaman login */
+    display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #000;
     background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('logo adita praja.jpg');
-    background-size: cover;
-    background-position: center;
-    padding: 20px; 
+    background-size: cover; background-position: center; padding: 20px; 
 }
-
-/* Float Card Login Sesuai Request */
 .login-card { 
-    background: var(--hijau-dasar); /* #006600 */
-    border: 3px solid var(--kuning-emas); /* #cc9900 */
-    padding: 40px; 
-    border-radius: 20px; 
-    box-shadow: var(--shadow-float); 
-    width: 100%; max-width: 400px; 
-    text-align: center; 
+    background: var(--hijau-dasar); border: 3px solid var(--kuning-emas); padding: 40px; 
+    border-radius: 20px; box-shadow: var(--shadow-float); width: 100%; max-width: 400px; text-align: center; 
 }
-.login-header h2 { 
-    color: var(--kuning-emas); 
-    font-size: 1.6rem; font-weight: 800; line-height: 1.2; margin-bottom: 5px; 
-    text-transform: uppercase;
-}
+.login-header h2 { color: var(--kuning-emas); font-size: 1.6rem; font-weight: 800; line-height: 1.2; margin-bottom: 5px; text-transform: uppercase; }
 .login-subtitle { color: var(--kuning-emas); font-size: 0.9rem; margin-bottom: 30px; opacity: 0.9;}
 
-/* Form Input Login */
+/* FORM INPUT */
 .form-group { margin-bottom: 20px; text-align: left; }
 .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--kuning-emas); margin-bottom: 8px; }
 .login-card input[type="text"], .login-card input[type="password"] {
-    background: var(--putih-keris);
-    color: var(--hijau-dasar);
-    font-weight: 600;
-    border: 2px solid var(--kuning-emas);
+    background: var(--putih-keris); color: var(--hijau-dasar); font-weight: 600; border: 2px solid var(--kuning-emas);
     width: 100%; padding: 12px 15px; border-radius: 8px; font-size: 0.95rem; outline: none; transition: var(--transisi);
 }
 .login-card input::placeholder { color: #888; font-weight: 400; }
-.btn-login { 
-    background: var(--kuning-emas); 
-    color: var(--hijau-dasar); 
-    border: none;
-    margin-top: 10px; width: 100%; 
-}
+.btn-login { background: var(--kuning-emas); color: var(--hijau-dasar); border: none; margin-top: 10px; width: 100%; }
 .btn-login:hover { background: #e6b800; color: var(--hitam-teks); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(204, 153, 0, 0.4); }
 
-/* Input global (non-login dashboard) */
 input[type="text"]:not(.login-card input), input[type="password"]:not(.login-card input), input[type="number"], input[type="date"] { 
     width: 100%; padding: 12px 15px; border: 2px solid #ccc; border-radius: 8px; font-size: 0.95rem; outline: none; transition: var(--transisi); background: #fafafa; 
 }
 input:focus { border-color: var(--hijau-dasar); background: white; }
 
-/* =========================================
-   KAMERA & GPS ALERTS
-   ========================================= */
+/* KAMERA & ALERTS */
 .alert { padding: 12px 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 700; font-size: 0.9rem; text-align: center; border: 1px solid transparent; }
 .alert-warning { background-color: #FFF9C4; color: #F57F17; border-color: #FBC02D; }
 .alert-success { background-color: #E8F5E9; color: var(--hijau-dasar); border-color: #A5D6A7; }
@@ -168,12 +108,10 @@ input:focus { border-color: var(--hijau-dasar); background: white; }
 .wm-bold { font-weight: 700; font-size: 1rem; color: var(--kuning-emas); }
 .wm-highlight { color: #81C784; font-weight: 600; margin-top: 3px; }
 
-/* =========================================
-   TABEL & DASHBOARD ADMIN
-   ========================================= */
+/* TABEL */
 .table-responsive { overflow-x: auto; border-radius: 8px; border: 1px solid #eee; }
 .table { width: 100%; border-collapse: collapse; background: white; white-space: nowrap; }
-.table th, .table td { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; text-align: left; font-size: 0.9rem; }
+.table th, .table td { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; text-align: left; font-size: 0.9rem; vertical-align: middle; }
 .table th { background-color: var(--hijau-dasar); color: var(--kuning-emas); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; border-bottom: 3px solid var(--kuning-emas); }
 .table-striped tbody tr:nth-child(even) { background-color: #f9f9f9; }
 .table tbody tr:hover { background-color: #f0f5f0; }
@@ -188,12 +126,10 @@ input:focus { border-color: var(--hijau-dasar); background: white; }
 .text-highlight { color: var(--hijau-dasar); font-weight: 800; }
 .mt-1 { margin-top: 10px; } .mt-2 { margin-top: 20px; }
 
-/* =========================================
-   PENYESUAIAN LAYAR KECIL (MOBILE)
-   ========================================= */
+/* MOBILE */
 @media (max-width: 600px) {
     .nav-brand { font-size: 1.1rem; }
     .nav-menu { gap: 10px; }
-    #user-info { display: none; } /* Sembunyikan nama di HP agar tidak tertumpuk */
+    #user-info { display: none; }
     .card-body { padding: 15px; }
 }
