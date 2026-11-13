@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Absensi Pramuka Adita Praja</title>
-    <!-- SDK Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -14,7 +13,7 @@
     <!-- NAVBAR -->
     <nav id="navbar" style="display: none;">
         <div class="nav-brand">
-            <img src="logo adita praja.jpg" alt="Logo" class="logo-nav">
+            <img src="logo.jpg" alt="Logo" class="logo-nav">
             <span>Adita Praja</span>
         </div>
         <div class="nav-menu">
@@ -27,7 +26,7 @@
     <div id="halaman-login" class="page active-page login-wrapper">
         <div class="login-card">
             <div class="login-header">
-                <img src="logo adita praja.jpg" alt="Logo Adita Praja" class="logo-login">
+                <img src="logo.jpg" alt="Logo Adita Praja" class="logo-login">
                 <h2>Absensi Pramuka<br>Adita Praja</h2>
             </div>
             <p class="login-subtitle">Silakan masuk menggunakan akun Anda</p>
@@ -48,8 +47,6 @@
     <!-- DASHBOARD ANGGOTA -->
     <div id="halaman-anggota" class="page">
         <div class="container main-grid">
-            
-            <!-- Kolom Kamera & GPS -->
             <div class="card p-0">
                 <div class="card-header">
                     <h3>Halo, <span id="nama-anggota" class="text-highlight"></span>!</h3>
@@ -78,7 +75,6 @@
                 </div>
             </div>
 
-            <!-- Kolom Riwayat Pribadi -->
             <div class="card">
                 <div class="card-header">
                     <h4>🕒 Riwayat Absensi Pribadi</h4>
@@ -108,7 +104,6 @@
             </div>
 
             <div class="admin-grid">
-                <!-- Pengaturan Radius -->
                 <div id="pengaturan-radius-card" class="card config-card" style="display: none;">
                     <div class="card-header">
                         <h4>⚙️ Pengaturan Sanggar</h4>
@@ -127,12 +122,11 @@
                                 <label>Maks Radius (Meter)</label>
                                 <input type="number" id="cfg-radius" required>
                             </div>
-                            <button type="submit" class="btn-primary mt-1 w-100">Simpan Pengaturan</button>
+                            <button type="submit" class="btn-primary mt-1 w-100">Simpan</button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Rekap Absen & Foto -->
                 <div class="card data-card">
                     <div class="card-header flex-between">
                         <h4>📋 Rekap Kehadiran</h4>
