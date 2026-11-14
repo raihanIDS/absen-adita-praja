@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Anggota - Adita Praja</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#006600">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body id="halaman-anggota">
+    <nav id="navbar">
+        <div class="nav-brand"><img src="logo.png" alt="Logo" class="logo-nav"><span>Adita Praja</span></div>
+        <div class="nav-menu"><span id="user-info">Memuat...</span><button class="btn-logout" onclick="logout()">Keluar</button></div>
+    </nav>
+
+    <div class="container main-grid">
+        <div class="card p-0">
+            <div class="card-header"><h3>Halo, <span id="nama-anggota" class="text-highlight"></span>!</h3></div>
+            <div class="card-body">
+                <div id="status-gps-alert" class="alert alert-warning">⏳ Mencari sinyal GPS...</div>
+                <div id="status-waktu-alert" class="alert alert-warning">⏳ Memuat jadwal absen...</div>
+                
+                <div class="kamera-container">
+                    <div class="kamera-box">
+                        <video id="kamera-stream" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;"></video>
+                        <div class="kamera-viewfinder" style="z-index: 1;"></div>
+                        <p class="kamera-text" id="teks-kamera" style="z-index: 1;">[ Membuka Kamera... ]</p>
+                        <div class="watermark" style="z-index: 1;">
+                            <div id="wm-nama" class="wm-bold">Nama</div>
+                            <div id="wm-waktu">Waktu</div>
+                            <div id="wm-jarak" class="wm-highlight">Jarak: - m</div>
+                        </div>
+                    </div>
+                    <button id="btn-rekam-absen" class="btn-absen" onclick="simpanAbsenCloud()"><span class="icon">📸</span> REKAM ABSENSI SEKARANG</button>
+                    <button id="btn-izin" class="btn-absen btn-izin mt-1" onclick="simpanIzinCloud()"><span class="icon">📝</span> PERIZINAN (IZIN/SAKIT)</button>
+                    <button id="btn-qr-scanner" class="btn-absen btn-qr mt-1" onclick="bukaScannerQR()"><span class="icon">📷</span> ABSEN CADANGAN (SCAN QR)</button>
+                </div>
+                <div id="qr-reader-container" style="display:none; margin-top: 15px;">
+                    <div id="qr-reader" style="width: 100%;"></div>
+                    <button class="btn-primary w-100 mt-1" style="background:#d32f2f;" onclick="tutupScannerQR()">Tutup Scanner</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h4>🕒 Riwayat Absensi Pribadi</h4></div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Waktu Absen</th><th>Status & Jarak</th></tr></thead>
+                        <tbody id="isi-riwayat-pribadi"><tr><td colspan="2" class="text-center">Memuat data...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
