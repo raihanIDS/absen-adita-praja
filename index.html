@@ -5,30 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Absensi Adita Praja</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#004d00">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="login-body">
     <div class="login-wrapper">
         <div class="glass-card">
-            <div class="login-header">
-                <!-- Pastikan gambar logo sudah transparan (tanpa background) dan bernama logo.png -->
-                <img src="logo.png" alt="Logo" class="logo-login">
-                <h2>Dewan Ambalan<br>Adita Praja</h2>
-            </div>
-            <p class="login-subtitle">Sistem Absensi Terintegrasi</p>
+            <img src="logo.png" alt="Logo" class="logo-login" style="width: 80px; margin-bottom: 10px;">
+            <h2>Dewan Ambalan<br>Adita Praja</h2>
+            <p class="login-subtitle" style="margin-bottom: 20px;">Sistem Absensi Terintegrasi</p>
             <form onsubmit="prosesLogin(event)">
                 <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="input-username" placeholder="Masukkan username" required>
+                    <label style="text-align: left; display: block; color: white;">Username</label>
+                    <input type="text" id="input-username" required>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="input-password" placeholder="Masukkan sandi" required>
+                    <label style="text-align: left; display: block; color: white;">Password</label>
+                    <input type="password" id="input-password" required>
                 </div>
-                <button type="submit" class="btn-primary btn-login">MASUK SEKARANG</button>
+                <button type="submit" class="btn-primary btn-login">MASUK</button>
             </form>
         </div>
     </div>
