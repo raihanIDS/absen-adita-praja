@@ -3,37 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Absensi Pramuka Adita Praja</title>
+    <title>Login - Absensi Adita Praja</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#004d00">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
-
-    <!-- NAVBAR -->
-    <nav id="navbar" style="display: none;">
-        <div class="nav-brand">
-            <img src="logo.png" alt="Logo" class="logo-nav">
-            <span>Adita Praja</span>
-        </div>
-        <div class="nav-menu">
-            <span id="user-info">Memuat...</span>
-            <button class="btn-logout" onclick="logout()">Keluar</button>
-        </div>
-    </nav>
-
-    <!-- HALAMAN LOGIN -->
-    <div id="halaman-login" class="page active-page login-wrapper">
-        <div class="login-card">
+<body class="login-body">
+    <div class="login-wrapper">
+        <div class="glass-card">
             <div class="login-header">
-                <img src="logo.jpg" alt="Logo Adita Praja" class="logo-login">
-                <h2>Absensi Pramuka<br>Adita Praja</h2>
+                <!-- Pastikan gambar logo sudah transparan (tanpa background) dan bernama logo.png -->
+                <img src="logo.png" alt="Logo" class="logo-login">
+                <h2>Dewan Ambalan<br>Adita Praja</h2>
             </div>
-            <p class="login-subtitle">Silakan masuk menggunakan akun Anda</p>
+            <p class="login-subtitle">Sistem Absensi Terintegrasi</p>
             <form onsubmit="prosesLogin(event)">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" id="input-username" placeholder="cth: kelvin_sutirta" required>
+                    <input type="text" id="input-username" placeholder="Masukkan username" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -43,124 +32,6 @@
             </form>
         </div>
     </div>
-
-    <!-- DASHBOARD ANGGOTA -->
-    <div id="halaman-anggota" class="page">
-        <div class="container main-grid">
-            <div class="card p-0">
-                <div class="card-header">
-                    <h3>Halo, <span id="nama-anggota" class="text-highlight"></span>!</h3>
-                </div>
-                <div class="card-body">
-                    <div id="status-gps-alert" class="alert alert-warning">
-                        ⏳ Mencari sinyal GPS...
-                    </div>
-                    
-                    <div class="kamera-container">
-                        <div class="kamera-box">
-                            <video id="kamera-stream" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;"></video>
-                            <div class="kamera-viewfinder" style="z-index: 1;"></div>
-                            <p class="kamera-text" id="teks-kamera" style="z-index: 1;">[ Membuka Kamera... ]</p>
-                            
-                            <div class="watermark" style="z-index: 1;">
-                                <div id="wm-nama" class="wm-bold">Nama</div>
-                                <div id="wm-waktu">Waktu</div>
-                                <div id="wm-jarak" class="wm-highlight">Jarak: - m</div>
-                            </div>
-                        </div>
-                        <button class="btn-absen" onclick="simpanAbsenCloud()">
-                            <span class="icon">📸</span> REKAM ABSENSI SEKARANG
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h4>🕒 Riwayat Absensi Pribadi</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr><th>Waktu Absen</th><th>Status & Jarak</th></tr>
-                            </thead>
-                            <tbody id="isi-riwayat-pribadi">
-                                <tr><td colspan="2" class="text-center">Memuat data...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DASHBOARD ADMIN -->
-    <div id="halaman-admin" class="page">
-        <div class="container">
-            <div class="welcome-banner" style="margin-bottom: 20px;">
-                <h3>📊 Dashboard Pemantau</h3>
-                <p>Selamat bertugas, Kak <b id="nama-admin" class="text-highlight"></b>.</p>
-            </div>
-
-            <div class="admin-grid">
-                <div id="pengaturan-radius-card" class="card config-card" style="display: none;">
-                    <div class="card-header">
-                        <h4>⚙️ Pengaturan Sanggar</h4>
-                    </div>
-                    <div class="card-body">
-                        <form onsubmit="simpanPengaturanRadiusCloud(event)">
-                            <div class="form-group">
-                                <label>Latitude</label>
-                                <input type="text" id="cfg-lat" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Longitude</label>
-                                <input type="text" id="cfg-lng" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Maks Radius (Meter)</label>
-                                <input type="number" id="cfg-radius" required>
-                            </div>
-                            <button type="submit" class="btn-primary mt-1 w-100">Simpan</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="card data-card">
-                    <div class="card-header flex-between">
-                        <h4>📋 Rekap Kehadiran</h4>
-                        <div class="filter-box">
-                            <input type="date" id="filter-tanggal" class="date-picker" onchange="muatDataAbsensiHarianCloud()">
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="summary-box">
-                            <span>Total Hadir Hari Ini:</span>
-                            <span class="total-badge" id="total-hadir">0</span>
-                        </div>
-                        <div class="table-responsive mt-2">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Jam</th>
-                                        <th>Nama Lengkap</th>
-                                        <th>Jarak</th>
-                                        <th>Status</th>
-                                        <th>Foto</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="isi-rekap-absen">
-                                    <tr><td colspan="5" class="text-center">Pilih tanggal untuk melihat data.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="app.js"></script>
 </body>
 </html>
