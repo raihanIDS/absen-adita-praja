@@ -2,7 +2,7 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err => console.log(err)); });
 }
 
-// 1. KONFIGURASI SUPABASE
+// 1. KONFIGURASI SUPABASE (WAJIB DIGANTI!)
 const supabaseUrl = 'https://xmvjtrlktkihutvmpskq.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhtdmp0cmxrdGtpaHV0dm1wc2txIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQzMTU1MTAsImV4cCI6MjEwOTg5MTUxMH0.m9rD8UtrL4FrIRsBerdcROouZMK812pJjpoSvTBQEzk';
 supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -74,7 +74,7 @@ let userLogin = JSON.parse(localStorage.getItem('userLogin'));
 let currentLat = null, currentLng = null, sanggarLat = 0, sanggarLng = 0;
 let maxRadius = 50, jamBuka = "00:00", jamTutup = "23:59";
 
-// 3. INISIALISASI HALAMAN
+// 3. INISIALISASI HALAMAN (Dengan Pengecekan Aman)
 document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
     if (path.includes('anggota.html') && (!userLogin || userLogin.role !== 'anggota')) { window.location.href = 'index.html'; return; }
@@ -82,18 +82,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if ((path.includes('index.html') || path.endsWith('/')) && userLogin) { window.location.href = userLogin.role === 'admin' ? 'admin.html' : 'anggota.html'; return; }
 
     if (document.getElementById('halaman-admin')) {
-        document.getElementById('user-info').innerText = userLogin.nama_lengkap;
+        if(document.getElementById('user-info')) document.getElementById('user-info').innerText = userLogin.nama_lengkap;
         muatPengaturanSanggar();
-        document.getElementById('filter-tanggal').value = new Date().toISOString().split('T')[0];
+        if(document.getElementById('filter-tanggal')) document.getElementById('filter-tanggal').value = new Date().toISOString().split('T')[0];
         muatDataAbsensiHarianCloud();
     }
     
     if (document.getElementById('halaman-anggota')) {
-        document.getElementById('user-info-top').innerText = userLogin.nama_lengkap;
-        document.getElementById('welcome-nama').innerText = userLogin.nama_lengkap;
-        document.getElementById('wm-nama').innerText = userLogin.nama_lengkap;
-        document.getElementById('wm-nama-rapat').innerText = userLogin.nama_lengkap;
-        ambilLokasiSekarang(); jalankanKamera(); jalankanJamLive(); muatRiwayatPribadi();
+        // Ganti Nama Sesuai User Yang Login (Cek Dulu Agar Tidak Error)
+        if (document.getElementById('user-info-top')) document.getElementById('user-info-top').innerText = userLogin.nama_lengkap;
+        if (document.getElementById('welcome-nama')) document.getElementById('welcome-nama').innerText = userLogin.nama_lengkap;
+        if (document.getElementById('wm-nama')) document.getElementById('wm-nama').innerText = userLogin.nama_lengkap;
+        if (document.getElementById('wm-nama-rapat')) document.getElementById('wm-nama-rapat').innerText = userLogin.nama_lengkap;
+        
+        ambilLokasiSekarang(); 
+        jalankanKamera(); 
+        jalankanJamLive(); 
+        muatRiwayatPribadi();
     }
 });
 
@@ -101,14 +106,19 @@ document.addEventListener('DOMContentLoaded', () => {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-    if (sidebar.style.left === '0px') { sidebar.style.left = '-260px'; overlay.style.display = 'none'; } 
-    else { sidebar.style.left = '0px'; overlay.style.display = 'block'; }
+    if (sidebar && overlay) {
+        if (sidebar.style.left === '0px') { sidebar.style.left = '-260px'; overlay.style.display = 'none'; } 
+        else { sidebar.style.left = '0px'; overlay.style.display = 'block'; }
+    }
 }
 
 function switchView(viewId) {
     document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
-    document.getElementById(viewId).style.display = 'block';
-    if(document.getElementById('sidebar').style.left === '0px') toggleSidebar();
+    const viewTarget = document.getElementById(viewId);
+    if(viewTarget) viewTarget.style.display = 'block';
+    
+    const sidebar = document.getElementById('sidebar');
+    if(sidebar && sidebar.style.left === '0px') toggleSidebar();
 }
 
 function prosesLogin(event) {
@@ -202,8 +212,10 @@ async function kirimKeDatabaseRPC(statusTeks, jarakMeter, rpcName, camId) {
 async function muatRiwayatPribadi() {
     const { data } = await supabase.from('riwayat_absensi').select('*').eq('username', userLogin.username).order('waktu_absen', { ascending: false }).limit(5);
     const tbody = document.getElementById('isi-riwayat-pribadi');
-    if (data && data.length > 0) tbody.innerHTML = data.map(a => `<tr><td>${new Date(a.waktu_absen).toLocaleString('id-ID')}</td><td>${a.status} <br> ${a.jarak_meter}m</td></tr>`).join('');
-    else tbody.innerHTML = `<tr><td colspan="2">Belum ada riwayat.</td></tr>`;
+    if(tbody){
+        if (data && data.length > 0) tbody.innerHTML = data.map(a => `<tr><td>${new Date(a.waktu_absen).toLocaleString('id-ID')}</td><td>${a.status} <br> ${a.jarak_meter}m</td></tr>`).join('');
+        else tbody.innerHTML = `<tr><td colspan="2">Belum ada riwayat.</td></tr>`;
+    }
 }
 
 // 7. FUNGSI ADMIN
@@ -214,9 +226,11 @@ async function muatPengaturanSanggar() {
         jamBuka = data.waktu_mulai ? data.waktu_mulai.substring(0,5) : "00:00";
         jamTutup = data.waktu_selesai ? data.waktu_selesai.substring(0,5) : "23:59";
         if (document.getElementById('halaman-admin')) {
-            document.getElementById('cfg-lat').value = data.latitude; document.getElementById('cfg-lng').value = data.longitude;
-            document.getElementById('cfg-radius').value = data.max_radius_meter;
-            document.getElementById('cfg-jam-mulai').value = jamBuka; document.getElementById('cfg-jam-selesai').value = jamTutup;
+            if(document.getElementById('cfg-lat')) document.getElementById('cfg-lat').value = data.latitude; 
+            if(document.getElementById('cfg-lng')) document.getElementById('cfg-lng').value = data.longitude;
+            if(document.getElementById('cfg-radius')) document.getElementById('cfg-radius').value = data.max_radius_meter;
+            if(document.getElementById('cfg-jam-mulai')) document.getElementById('cfg-jam-mulai').value = jamBuka; 
+            if(document.getElementById('cfg-jam-selesai')) document.getElementById('cfg-jam-selesai').value = jamTutup;
         }
     }
 }
@@ -230,19 +244,23 @@ async function simpanPengaturanRadiusCloud(e) {
 }
 
 async function muatDataAbsensiHarianCloud() {
-    const tgl = document.getElementById('filter-tanggal').value; if (!tgl) return;
-    const { data } = await supabase.from('riwayat_absensi').select('*').eq('tanggal_absen', tgl).order('waktu_absen', { ascending: true });
+    const tglEl = document.getElementById('filter-tanggal');
+    if (!tglEl || !tglEl.value) return;
+    const { data } = await supabase.from('riwayat_absensi').select('*').eq('tanggal_absen', tglEl.value).order('waktu_absen', { ascending: true });
     const tbody = document.getElementById('isi-rekap-absen');
-    if (data && data.length > 0) {
-        tbody.innerHTML = data.map(a => {
-            const foto = a.foto_base64 ? `<img src="${a.foto_base64}" width="40" style="border-radius:5px; cursor:pointer;" onclick="window.open('${a.foto_base64}')">` : '-';
-            return `<tr><td>${new Date(a.waktu_absen).toLocaleTimeString('id-ID')}</td><td>${a.nama_lengkap}</td><td>${a.jarak_meter}m</td><td>${a.status}</td><td>${foto}</td></tr>`;
-        }).join('');
-    } else tbody.innerHTML = `<tr><td colspan="5" class="text-center">Kosong.</td></tr>`;
+    if(tbody){
+        if (data && data.length > 0) {
+            tbody.innerHTML = data.map(a => {
+                const foto = a.foto_base64 ? `<img src="${a.foto_base64}" width="40" style="border-radius:5px; cursor:pointer;" onclick="window.open('${a.foto_base64}')">` : '-';
+                return `<tr><td>${new Date(a.waktu_absen).toLocaleTimeString('id-ID')}</td><td>${a.nama_lengkap}</td><td>${a.jarak_meter}m</td><td>${a.status}</td><td>${foto}</td></tr>`;
+            }).join('');
+        } else tbody.innerHTML = `<tr><td colspan="5" class="text-center">Kosong.</td></tr>`;
+    }
 }
 
 function exportExcel() {
     const table = document.getElementById("tabel-rekap");
+    if(!table) return;
     const wb = XLSX.utils.table_to_book(table, { sheet: "Absensi_Adita_Praja" });
     XLSX.writeFile(wb, `Rekap_Absensi_${document.getElementById('filter-tanggal').value}.xlsx`);
 }
