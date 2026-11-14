@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Adita Praja</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#006600">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body id="halaman-admin">
+    <nav id="navbar">
+        <div class="nav-brand"><img src="logo.png" alt="Logo" class="logo-nav"><span>Adita Praja</span></div>
+        <div class="nav-menu"><span id="user-info">Memuat...</span><button class="btn-logout" onclick="logout()">Keluar</button></div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-banner" style="margin-bottom: 20px;">
+            <h3>📊 Dashboard Pemantau & Pengurus</h3>
+            <p>Selamat bertugas, Kak <b id="nama-admin" class="text-highlight"></b>.</p>
+        </div>
+
+        <div class="admin-grid">
+            <div class="panel-kiri">
+                <div id="pengaturan-radius-card" class="card config-card mb-2">
+                    <div class="card-header"><h4>⚙️ Pengaturan Sanggar</h4></div>
+                    <div class="card-body">
+                        <form onsubmit="simpanPengaturanRadiusCloud(event)">
+                            <div class="form-group"><label>Latitude & Longitude</label>
+                                <div style="display:flex; gap:10px;"><input type="text" id="cfg-lat" required><input type="text" id="cfg-lng" required></div>
+                            </div>
+                            <div class="form-group"><label>Maks Radius (Meter)</label><input type="number" id="cfg-radius" required></div>
+                            <div class="form-group"><label>Jam Buka & Tutup Absen</label>
+                                <div style="display:flex; gap:10px;"><input type="time" id="cfg-jam-mulai" required><input type="time" id="cfg-jam-selesai" required></div>
+                            </div>
+                            <button type="submit" class="btn-primary mt-1 w-100">Simpan Pengaturan</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card config-card mb-2">
+                    <div class="card-header"><h4>📲 Generator QR Code</h4></div>
+                    <div class="card-body text-center">
+                        <p style="font-size: 0.8rem; margin-bottom:10px;">Tampilkan QR ini kepada anggota jika GPS di HP rusak.</p>
+                        <button class="btn-absen btn-qr w-100" onclick="tampilkanQRAdmin()">TAMPILKAN QR HARI INI</button>
+                        <div id="qr-admin-container" style="display:none; margin-top:15px;"><canvas id="qr-canvas"></canvas></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card data-card">
+                <div class="card-header flex-between">
+                    <h4>📋 Rekap Kehadiran</h4>
+                    <div class="filter-box flex-between" style="gap: 10px;">
+                        <input type="date" id="filter-tanggal" class="date-picker" onchange="muatDataAbsensiHarianCloud()">
+                        <button class="btn-primary" style="background:#1d6f42;" onclick="exportExcel()">📥 EXCEL</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="max-width: 300px; margin: 0 auto 20px auto;"><canvas id="chart-kehadiran"></canvas></div>
+                    <div class="table-responsive mt-2">
+                        <table class="table table-striped" id="tabel-rekap">
+                            <thead><tr><th>Jam</th><th>Nama Lengkap</th><th>Jarak</th><th>Status</th><th>Foto</th></tr></thead>
+                            <tbody id="isi-rekap-absen"><tr><td colspan="5" class="text-center">Pilih tanggal untuk melihat data.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
