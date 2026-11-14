@@ -2,15 +2,13 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err => console.log(err)); });
 }
 
-const supabaseUrl = 'https://xmvjtrlktkihutvmpskq.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhtdmp0cmxrdGtpaHV0dm1wc2txIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQzMTU1MTAsImV4cCI6MjEwOTg5MTUxMH0.m9rD8UtrL4FrIRsBerdcROouZMK812pJjpoSvTBQEzk';
+// 1. KONFIGURASI SUPABASE
+const supabaseUrl = 'URL_SUPABASE_ANDA';
+const supabaseKey = 'KEY_SUPABASE_ANDA';
 supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// ==========================================
-// DATA 57 AKUN (Berdasarkan PDF Adita Praja)
-// ==========================================
+// 2. DATA 57 AKUN
 const databaseUsers = [
-    // 1. Akun Otoritas (6 Akun)
     { username: "admin_adita", password: "admin123", nama_lengkap: "Admin Sistem Web", role: "admin" },
     { username: "pradana_pa", password: "pramuka2026", nama_lengkap: "Kelvin Sutirta (Pradana Pa)", role: "admin" },
     { username: "pradana_pi", password: "pramuka2026", nama_lengkap: "Aurell Tatia (Pradana Pi)", role: "admin" },
@@ -18,7 +16,6 @@ const databaseUsers = [
     { username: "kerani_pi1", password: "pramuka2026", nama_lengkap: "Nabila Putri (Kerani Pi 1)", role: "admin" },
     { username: "kerani_pi2", password: "pramuka2026", nama_lengkap: "Selma Janiska (Kerani Pi 2)", role: "admin" },
     
-    // 2. Akun Pribadi Pengurus Harian (12 Akun)
     { username: "kelvin_sutirta", password: "aditapraja", nama_lengkap: "Kelvin Sutirta Augusto W.", role: "anggota" },
     { username: "aurell_tatia", password: "aditapraja", nama_lengkap: "Aurell Tatia Diva Melody", role: "anggota" },
     { username: "moch_sigit", password: "aditapraja", nama_lengkap: "Moch Sigit Permadi", role: "anggota" },
@@ -32,7 +29,6 @@ const databaseUsers = [
     { username: "fatich_faiklil", password: "aditapraja", nama_lengkap: "Fatich Faiklil Ramadhani", role: "anggota" },
     { username: "galuh_lyandhini", password: "aditapraja", nama_lengkap: "Galuh Lyandhini", role: "anggota" },
 
-    // 3. Akun Anggota & Seksi Bidang (39 Akun)
     { username: "tri_cahya", password: "aditapraja", nama_lengkap: "Tri Cahya Mustika", role: "anggota" },
     { username: "nadia_octavia", password: "aditapraja", nama_lengkap: "Nadia Octavia", role: "anggota" },
     { username: "khoirotul_aini", password: "aditapraja", nama_lengkap: "Khoirotul Aini", role: "anggota" },
@@ -77,26 +73,15 @@ const databaseUsers = [
 let userLogin = JSON.parse(localStorage.getItem('userLogin'));
 let currentLat = null, currentLng = null, sanggarLat = 0, sanggarLng = 0;
 let maxRadius = 50, jamBuka = "00:00", jamTutup = "23:59";
-let jamInterval, html5QrcodeScanner = null, grafikChart = null;
-let currentAccuracy = 0; 
 
-// ==========================================
-// SISTEM ROUTING & INISIALISASI HALAMAN
-// ==========================================
+// 3. INISIALISASI HALAMAN
 document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
-
     if (path.includes('anggota.html') && (!userLogin || userLogin.role !== 'anggota')) { window.location.href = 'index.html'; return; }
     if (path.includes('admin.html') && (!userLogin || userLogin.role !== 'admin')) { window.location.href = 'index.html'; return; }
-    
-    if ((path.includes('index.html') || path.endsWith('/')) && userLogin) {
-        if (userLogin.role === 'admin') { window.location.href = 'admin.html'; } 
-        else { window.location.href = 'anggota.html'; }
-        return;
-    }
+    if ((path.includes('index.html') || path.endsWith('/')) && userLogin) { window.location.href = userLogin.role === 'admin' ? 'admin.html' : 'anggota.html'; return; }
 
     if (document.getElementById('halaman-admin')) {
-        document.getElementById('nama-admin').innerText = userLogin.nama_lengkap;
         document.getElementById('user-info').innerText = userLogin.nama_lengkap;
         muatPengaturanSanggar();
         document.getElementById('filter-tanggal').value = new Date().toISOString().split('T')[0];
@@ -104,180 +89,124 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (document.getElementById('halaman-anggota')) {
-        document.getElementById('nama-anggota').innerText = userLogin.nama_lengkap;
+        document.getElementById('user-info-top').innerText = userLogin.nama_lengkap;
+        document.getElementById('welcome-nama').innerText = userLogin.nama_lengkap;
         document.getElementById('wm-nama').innerText = userLogin.nama_lengkap;
-        document.getElementById('user-info').innerText = userLogin.nama_lengkap;
-        ambilLokasiSekarang();
-        jalankanKamera();
-        jalankanJamLive();
-        muatRiwayatPribadi();
+        document.getElementById('wm-nama-rapat').innerText = userLogin.nama_lengkap;
+        ambilLokasiSekarang(); jalankanKamera(); jalankanJamLive(); muatRiwayatPribadi();
     }
 });
 
+// 4. MENU SIDEBAR & AUTENTIKASI
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (sidebar.style.left === '0px') { sidebar.style.left = '-260px'; overlay.style.display = 'none'; } 
+    else { sidebar.style.left = '0px'; overlay.style.display = 'block'; }
+}
+
+function switchView(viewId) {
+    document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
+    document.getElementById(viewId).style.display = 'block';
+    if(document.getElementById('sidebar').style.left === '0px') toggleSidebar();
+}
+
 function prosesLogin(event) {
     event.preventDefault();
-    const userIn = document.getElementById('input-username').value;
-    const passIn = document.getElementById('input-password').value;
-    const userFound = databaseUsers.find(u => u.username === userIn && u.password === passIn);
-
-    if (userFound) {
-        localStorage.setItem('userLogin', JSON.stringify(userFound));
-        if (userFound.role === 'admin') window.location.href = 'admin.html';
-        else window.location.href = 'anggota.html';
-    } else {
-        alert("Username atau Password salah!");
-    }
+    const userFound = databaseUsers.find(u => u.username === document.getElementById('input-username').value && u.password === document.getElementById('input-password').value);
+    if (userFound) { localStorage.setItem('userLogin', JSON.stringify(userFound)); window.location.href = userFound.role === 'admin' ? 'admin.html' : 'anggota.html'; } 
+    else alert("Username atau Password salah!");
 }
+function logout() { localStorage.removeItem('userLogin'); window.location.href = 'index.html'; }
 
-function logout() {
-    localStorage.removeItem('userLogin');
-    window.location.href = 'index.html';
-}
-
-// ==========================================
-// FUNGSI KAMERA & WAKTU (ANGGOTA)
-// ==========================================
+// 5. GPS & KAMERA
 async function jalankanKamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-        document.getElementById('kamera-stream').srcObject = stream;
-        document.getElementById('teks-kamera').style.display = 'none';
-    } catch (err) {
-        document.getElementById('teks-kamera').innerText = "[ Izin Kamera Ditolak ]";
-    }
+        const camKeg = document.getElementById('kamera-stream'); if(camKeg) camKeg.srcObject = stream;
+        const camRap = document.getElementById('kamera-stream-rapat'); if(camRap) camRap.srcObject = stream;
+    } catch (err) { alert("Izin kamera ditolak!"); }
 }
 
 function jalankanJamLive() {
-    jamInterval = setInterval(() => {
+    setInterval(() => {
         const skr = new Date();
-        document.getElementById('wm-waktu').innerText = skr.toLocaleString('id-ID', {day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'});
+        const strWaktu = skr.toLocaleString('id-ID');
+        if(document.getElementById('wm-waktu')) document.getElementById('wm-waktu').innerText = strWaktu;
+        if(document.getElementById('wm-waktu-rapat')) document.getElementById('wm-waktu-rapat').innerText = strWaktu;
         
         const jamSekarang = skr.getHours().toString().padStart(2, '0') + ":" + skr.getMinutes().toString().padStart(2, '0');
-        const stWaktu = document.getElementById('status-waktu-alert'), btnAbsen = document.getElementById('btn-rekam-absen');
-
-        if (jamSekarang >= jamBuka && jamSekarang <= jamTutup) {
-            stWaktu.className = "alert alert-success"; stWaktu.innerHTML = `✅ Waktu Absen Buka (${jamBuka} - ${jamTutup})`;
-            btnAbsen.disabled = false; btnAbsen.style.opacity = "1";
-        } else {
-            stWaktu.className = "alert alert-danger"; stWaktu.innerHTML = `⛔ Waktu Absen Tutup (Hanya buka: ${jamBuka} - ${jamTutup})`;
-            btnAbsen.disabled = true; btnAbsen.style.opacity = "0.5";
+        const stWaktu = document.getElementById('status-waktu-alert');
+        if (stWaktu) {
+            if (jamSekarang >= jamBuka && jamSekarang <= jamTutup) { stWaktu.className = "alert alert-success"; stWaktu.innerHTML = `✅ Waktu Absen Buka (${jamBuka} - ${jamTutup})`; } 
+            else { stWaktu.className = "alert alert-danger"; stWaktu.innerHTML = `⛔ Waktu Absen Tutup (Hanya buka: ${jamBuka} - ${jamTutup})`; }
         }
     }, 1000);
 }
 
-// ==========================================
-// PENDETEKSI GPS & KIRIM ABSEN
-// ==========================================
 async function ambilLokasiSekarang() {
-    const stGps = document.getElementById('status-gps-alert');
     await muatPengaturanSanggar();
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(
-            (pos) => {
-                currentLat = pos.coords.latitude; currentLng = pos.coords.longitude;
-                currentAccuracy = pos.coords.accuracy; 
-                const jarak = hitungJarak(currentLat, currentLng, sanggarLat, sanggarLng);
-                document.getElementById('wm-jarak').innerText = `Jarak: ${Math.round(jarak)}m`;
-
-                if (currentAccuracy > 100) {
-                    stGps.className = "alert alert-warning";
-                    stGps.innerHTML = `⚠️ Sinyal GPS Lemah (Meleset ${Math.round(currentAccuracy)}m). Tolong cari area terbuka!`;
-                } else if (jarak <= maxRadius) {
-                    stGps.className = "alert alert-success";
-                    stGps.innerHTML = `✅ GPS Sesuai. Jarak: ${Math.round(jarak)} Meter.`;
-                } else {
-                    stGps.className = "alert alert-danger";
-                    stGps.innerHTML = `⛔ Jarak Terlalu Jauh: ${Math.round(jarak)} Meter (Maks ${maxRadius}m).`;
-                }
-            },
-            (err) => { stGps.className = "alert alert-danger"; stGps.innerHTML = `⛔ GPS Gagal! Pastikan Izin Lokasi aktif.`; },
-            { enableHighAccuracy: true, maximumAge: 0 } 
-        );
+        navigator.geolocation.watchPosition((pos) => {
+            currentLat = pos.coords.latitude; currentLng = pos.coords.longitude;
+            const jarak = hitungJarak(currentLat, currentLng, sanggarLat, sanggarLng);
+            if(document.getElementById('wm-jarak')) document.getElementById('wm-jarak').innerText = `Jarak: ${Math.round(jarak)}m`;
+            const stGps = document.getElementById('status-gps-alert');
+            if(stGps) {
+                if (jarak <= maxRadius) { stGps.className = "alert alert-success"; stGps.innerHTML = `✅ GPS Sesuai. Jarak: ${Math.round(jarak)}m.`; } 
+                else { stGps.className = "alert alert-danger"; stGps.innerHTML = `⛔ Jarak Jauh: ${Math.round(jarak)}m (Maks ${maxRadius}m).`; }
+            }
+        }, (err) => { if(document.getElementById('status-gps-alert')) document.getElementById('status-gps-alert').innerHTML = `⛔ GPS Gagal!`; }, { enableHighAccuracy: true });
     }
 }
 
 function hitungJarak(lat1, lon1, lat2, lon2) {
     const R = 6371e3, rad = Math.PI / 180;
-    const a = Math.sin((lat2 - lat1)*rad/2)**2 + Math.cos(lat1*rad) * Math.cos(lat2*rad) * Math.sin((lon2 - lon1)*rad/2)**2;
+    const a = Math.sin((lat2 - lat1)*rad/2)**2 + Math.cos(lat1*rad)*Math.cos(lat2*rad)*Math.sin((lon2 - lon1)*rad/2)**2;
     return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
 }
 
+// 6. KIRIM ABSEN KEGIATAN & RAPAT
 async function simpanAbsenCloud() {
-    if (!currentLat || !currentLng) { alert("Sinyal GPS belum didapat!"); return; }
-    if (currentAccuracy > 100) { alert(`Akurasi GPS Anda terlalu buruk (Meleset ${Math.round(currentAccuracy)} meter). Pindah ke tempat terbuka agar absen valid.`); return; }
-    
-    const skr = new Date();
-    const jamSkr = skr.getHours().toString().padStart(2, '0') + ":" + skr.getMinutes().toString().padStart(2, '0');
-    if (jamSkr < jamBuka || jamSkr > jamTutup) { alert("Sedang bukan jam absen!"); return; }
-
-    const jarak = hitungJarak(currentLat, currentLng, sanggarLat, sanggarLng);
-    const statusAbsen = jarak <= maxRadius ? 'Hadir' : 'Di Luar Area';
-
-    kirimKeDatabase(statusAbsen, Math.round(jarak));
+    if (!currentLat || !currentLng) { alert("Tunggu sinyal GPS!"); return; }
+    const jarak = Math.round(hitungJarak(currentLat, currentLng, sanggarLat, sanggarLng));
+    kirimKeDatabaseRPC(jarak <= maxRadius ? 'Hadir' : 'Di Luar Area', jarak, 'catat_absensi_geofencing', 'kamera-stream');
 }
-
 async function simpanIzinCloud() {
-    const alasan = prompt("Masukkan alasan izin (contoh: Sakit, Keluarga):");
-    if (!alasan || alasan.trim() === "") return;
-    let jrk = 0; if (currentLat && currentLng) jrk = Math.round(hitungJarak(currentLat, currentLng, sanggarLat, sanggarLng));
-    kirimKeDatabase("Izin - " + alasan.trim(), jrk);
+    const alasan = prompt("Masukkan alasan izin kegiatan:"); if (!alasan) return;
+    let jrk = currentLat ? Math.round(hitungJarak(currentLat, currentLng, sanggarLat, sanggarLng)) : 0;
+    kirimKeDatabaseRPC("Izin - " + alasan, jrk, 'catat_absensi_geofencing', 'kamera-stream');
+}
+async function simpanAbsenRapat() { kirimKeDatabaseRPC('Hadir', 0, 'catat_absensi_rapat', 'kamera-stream-rapat'); }
+async function simpanIzinRapat() {
+    const alasan = prompt("Masukkan alasan izin rapat:"); if (!alasan) return;
+    kirimKeDatabaseRPC("Izin - " + alasan, 0, 'catat_absensi_rapat', 'kamera-stream-rapat');
 }
 
-async function kirimKeDatabase(statusTeks, jarakMeter) {
-    const video = document.getElementById('kamera-stream');
+async function kirimKeDatabaseRPC(statusTeks, jarakMeter, rpcName, camId) {
+    const video = document.getElementById(camId);
     let fotoBase64 = "";
     if (video && video.videoWidth > 0) {
-        const cvs = document.createElement('canvas');
-        cvs.width = 320; cvs.height = 240;
+        const cvs = document.createElement('canvas'); cvs.width = 320; cvs.height = 240;
         cvs.getContext('2d').drawImage(video, 0, 0, cvs.width, cvs.height);
         fotoBase64 = cvs.toDataURL('image/jpeg', 0.6); 
     }
-
-    const { error } = await supabase.from('riwayat_absensi').insert([{
-        username: userLogin.username, nama_lengkap: userLogin.nama_lengkap,
-        jarak_meter: jarakMeter, status: statusTeks,
-        tanggal_absen: new Date().toISOString().split('T')[0], foto_base64: fotoBase64
-    }]);
-
-    if (error) alert("Gagal mengirim data!"); 
-    else { alert("Berhasil! Data absensi Anda tersimpan."); muatRiwayatPribadi(); }
+    try {
+        const { data, error } = await supabase.rpc(rpcName, {
+            p_username: userLogin.username, p_nama: userLogin.nama_lengkap, p_jarak: jarakMeter, p_status: statusTeks, p_foto: fotoBase64, p_tgl: new Date().toISOString().split('T')[0]
+        });
+        if (error) throw error; alert("Berhasil! " + data.message); muatRiwayatPribadi();
+    } catch (err) { alert(err.message); }
 }
 
-// ==========================================
-// FITUR QR CODE
-// ==========================================
-function tampilkanQRAdmin() {
-    const tglHariIni = new Date().toISOString().split('T')[0];
-    const kodeRahasia = "ADITA_PRAJA_" + tglHariIni;
-    QRCode.toCanvas(document.getElementById('qr-canvas'), kodeRahasia, function (error) {
-        if (error) console.error(error);
-        document.getElementById('qr-admin-container').style.display = 'block';
-    });
-}
-function bukaScannerQR() {
-    document.getElementById('qr-reader-container').style.display = 'block';
-    if(!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
-        html5QrcodeScanner.render((decodedText, decodedResult) => {
-            const tglHariIni = new Date().toISOString().split('T')[0];
-            if (decodedText === "ADITA_PRAJA_" + tglHariIni) {
-                tutupScannerQR();
-                alert("QR Code Valid! Memproses Absensi Cadangan...");
-                kirimKeDatabase("Hadir (QR Code)", 0);
-            } else {
-                alert("QR Code Kadaluarsa atau Tidak Valid!");
-            }
-        }, (err) => {});
-    }
-}
-function tutupScannerQR() {
-    if(html5QrcodeScanner) { html5QrcodeScanner.clear(); html5QrcodeScanner = null; }
-    document.getElementById('qr-reader-container').style.display = 'none';
+async function muatRiwayatPribadi() {
+    const { data } = await supabase.from('riwayat_absensi').select('*').eq('username', userLogin.username).order('waktu_absen', { ascending: false }).limit(5);
+    const tbody = document.getElementById('isi-riwayat-pribadi');
+    if (data && data.length > 0) tbody.innerHTML = data.map(a => `<tr><td>${new Date(a.waktu_absen).toLocaleString('id-ID')}</td><td>${a.status} <br> ${a.jarak_meter}m</td></tr>`).join('');
+    else tbody.innerHTML = `<tr><td colspan="2">Belum ada riwayat.</td></tr>`;
 }
 
-// ==========================================
-// FITUR ADMIN (PENGATURAN & EXCEL)
-// ==========================================
+// 7. FUNGSI ADMIN
 async function muatPengaturanSanggar() {
     const { data } = await supabase.from('setting_lokasi').select('*').eq('id', 1).single();
     if (data) {
@@ -295,47 +224,21 @@ async function muatPengaturanSanggar() {
 async function simpanPengaturanRadiusCloud(e) {
     e.preventDefault();
     await supabase.from('setting_lokasi').update({ 
-        latitude: document.getElementById('cfg-lat').value, longitude: document.getElementById('cfg-lng').value, 
-        max_radius_meter: document.getElementById('cfg-radius').value, waktu_mulai: document.getElementById('cfg-jam-mulai').value, waktu_selesai: document.getElementById('cfg-jam-selesai').value
+        latitude: document.getElementById('cfg-lat').value, longitude: document.getElementById('cfg-lng').value, max_radius_meter: document.getElementById('cfg-radius').value, waktu_mulai: document.getElementById('cfg-jam-mulai').value + ':00', waktu_selesai: document.getElementById('cfg-jam-selesai').value + ':00'
     }).eq('id', 1);
-    alert("Pengaturan Tersimpan!"); muatPengaturanSanggar();
-}
-
-async function muatRiwayatPribadi() {
-    const { data } = await supabase.from('riwayat_absensi').select('*').eq('username', userLogin.username).order('waktu_absen', { ascending: false }).limit(5);
-    const tbody = document.getElementById('isi-riwayat-pribadi');
-    if (data && data.length > 0) {
-        tbody.innerHTML = data.map(a => `<tr><td>${new Date(a.waktu_absen).toLocaleDateString('id-ID')} <br> <small>${new Date(a.waktu_absen).toLocaleTimeString('id-ID')}</small></td><td><span class="badge">${a.status}</span> <br> <small>${a.jarak_meter} m</small></td></tr>`).join('');
-    } else tbody.innerHTML = `<tr><td colspan="2" class="text-center">Belum ada data.</td></tr>`;
+    alert("Pengaturan Berhasil Disimpan!"); muatPengaturanSanggar();
 }
 
 async function muatDataAbsensiHarianCloud() {
     const tgl = document.getElementById('filter-tanggal').value; if (!tgl) return;
     const { data } = await supabase.from('riwayat_absensi').select('*').eq('tanggal_absen', tgl).order('waktu_absen', { ascending: true });
-    
     const tbody = document.getElementById('isi-rekap-absen');
-    let totalHadir = 0, totalIzin = 0, totalLuar = 0;
-
     if (data && data.length > 0) {
         tbody.innerHTML = data.map(a => {
-            if (a.status.includes('Hadir')) totalHadir++;
-            else if (a.status.includes('Izin')) totalIzin++;
-            else totalLuar++;
-
-            const foto = a.foto_base64 ? `<img src="${a.foto_base64}" width="40" style="border-radius:5px;cursor:pointer;" onclick="window.open('${a.foto_base64}')">` : '-';
-            return `<tr><td>${new Date(a.waktu_absen).toLocaleTimeString('id-ID')}</td><td><b>${a.nama_lengkap}</b></td><td>${a.jarak_meter}m</td><td><span class="badge">${a.status}</span></td><td>${foto}</td></tr>`;
+            const foto = a.foto_base64 ? `<img src="${a.foto_base64}" width="40" style="border-radius:5px; cursor:pointer;" onclick="window.open('${a.foto_base64}')">` : '-';
+            return `<tr><td>${new Date(a.waktu_absen).toLocaleTimeString('id-ID')}</td><td>${a.nama_lengkap}</td><td>${a.jarak_meter}m</td><td>${a.status}</td><td>${foto}</td></tr>`;
         }).join('');
     } else tbody.innerHTML = `<tr><td colspan="5" class="text-center">Kosong.</td></tr>`;
-    
-    if (grafikChart) grafikChart.destroy();
-    grafikChart = new Chart(document.getElementById('chart-kehadiran').getContext('2d'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Hadir', 'Izin / Sakit', 'Di Luar Area / Gagal'],
-            datasets: [{ data: [totalHadir, totalIzin, totalLuar], backgroundColor: ['#2E8B57', '#F57F17', '#D32F2F'] }]
-        },
-        options: { plugins: { legend: { position: 'bottom' } } }
-    });
 }
 
 function exportExcel() {
