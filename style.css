@@ -1,95 +1,51 @@
-:root {
-    --hijau-dasar: #006600; --kuning-emas: #cc9900; --hijau-logo: #2E8B57;  
-    --putih-keris: #FFFFFF; --hitam-teks: #111111; --bg-body: #f4f7f4; --bg-card: #FFFFFF;
-    --radius: 12px; --shadow-halus: 0 8px 24px rgba(0, 102, 0, 0.15); --transisi: all 0.3s ease;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-body { background-color: var(--bg-body); color: var(--hitam-teks); line-height: 1.6; }
+:root { --hijau: #006600; --emas: #cc9900; --putih: #fff; --bg: #f4f7f4; --font: 'Arial', sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); }
+body { background: var(--bg); color: #333; line-height: 1.5; }
 
-/* NAVBAR & GLOBAL */
-.logo-nav { width: 35px; height: auto; vertical-align: middle; margin-right: 10px; border-radius: 50%; }
-nav { background: var(--hijau-dasar); color: var(--putih-keris); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 3px solid var(--kuning-emas); }
-.nav-brand { font-weight: 800; font-size: 1.3rem; color: var(--kuning-emas); display: flex; align-items: center; }
-.nav-brand span { color: var(--putih-keris); }
-.nav-menu { display: flex; align-items: center; gap: 20px; }
-#user-info { font-weight: 600; font-size: 0.9rem; }
-button { font-family: inherit; transition: var(--transisi); border: none; cursor: pointer; }
-.btn-logout { background: transparent; color: var(--kuning-emas); border: 1px solid var(--kuning-emas); padding: 6px 15px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
-.btn-logout:hover { background: var(--kuning-emas); color: var(--hijau-dasar); }
-.container { max-width: 1100px; margin: 30px auto; padding: 0 20px; animation: fadeIn 0.5s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* NAVBAR & MENU HAMBURGER */
+nav { background: var(--hijau); color: var(--putih); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--emas); }
+.nav-left { display: flex; align-items: center; }
+.hamburger-btn { background: transparent; color: var(--emas); font-size: 24px; border: none; cursor: pointer; margin-right: 15px; }
+.nav-brand { font-weight: bold; font-size: 1.2rem; color: var(--emas); display: flex; align-items: center; }
+.nav-logo { width: 30px; height: 30px; margin-right: 10px; }
+.btn-logout { background: transparent; color: var(--emas); border: 1px solid var(--emas); padding: 5px 15px; border-radius: 20px; cursor: pointer; margin-left: 15px; }
+.btn-logout:hover { background: var(--emas); color: var(--hijau); }
 
-/* DESAIN LOGIN BARU (ANIMASI GRADIENT & GLASSMORPHISM) */
-.login-body { margin: 0; overflow: hidden; }
-.login-wrapper {
-    display: flex; justify-content: center; align-items: center; min-height: 100vh;
-    background: linear-gradient(-45deg, #003300, #006600, #b28500, #001a00);
-    background-size: 400% 400%;
-    animation: gradientBG 12s ease infinite;
-    padding: 20px;
-}
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-.glass-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 40px; border-radius: 24px;
-    width: 100%; max-width: 420px; text-align: center;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    color: white;
-}
-.logo-login { width: 120px; height: auto; margin-bottom: 10px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4)); }
-.glass-card h2 { color: var(--kuning-emas); font-size: 1.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; text-shadow: 1px 1px 5px rgba(0,0,0,0.5); }
-.login-subtitle { color: #e0e0e0; font-size: 0.95rem; margin-bottom: 30px; font-weight: 300; }
-.glass-card .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #fff; margin-bottom: 8px; text-align: left; }
-.glass-card input { background: rgba(255, 255, 255, 0.9); color: var(--hitam-teks); font-weight: 600; border: none; width: 100%; padding: 14px; border-radius: 12px; outline: none; transition: 0.3s; }
-.glass-card input:focus { background: white; box-shadow: 0 0 0 3px var(--kuning-emas); }
-.btn-login { background: var(--kuning-emas); color: var(--hijau-dasar); width: 100%; margin-top: 15px; font-size: 1.1rem; padding: 14px; border-radius: 12px; border: none; }
-.btn-login:hover { background: #e6b800; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(204, 153, 0, 0.4); }
+/* SIDEBAR STYLES */
+#sidebar { height: 100%; width: 260px; position: fixed; z-index: 1000; top: 0; left: -260px; background-color: var(--putih); box-shadow: 2px 0 10px rgba(0,0,0,0.2); overflow-x: hidden; transition: 0.3s; padding-top: 20px; }
+.sidebar-header { text-align: center; padding-bottom: 20px; border-bottom: 2px solid var(--bg); margin-bottom: 10px; }
+.sidebar-header img { width: 60px; }
+.sidebar-header h3 { color: var(--hijau); margin-top: 10px; font-size: 1.1rem; }
+#sidebar a { padding: 15px 25px; text-decoration: none; font-size: 1rem; color: #333; display: block; transition: 0.2s; font-weight: bold; border-bottom: 1px solid #eee; }
+#sidebar a:hover { background-color: var(--bg); color: var(--hijau); padding-left: 30px; }
+#sidebar-overlay { position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.5); z-index: 999; }
 
-/* DASHBOARD UTAMA */
-.main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-.admin-grid { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
-@media (min-width: 850px) { .main-grid { grid-template-columns: 1.2fr 1fr; } .admin-grid { grid-template-columns: 350px 1fr; } }
-.card { background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow-halus); overflow: hidden; border: 1px solid #e0e0e0; }
-.card-header { background: #fafafa; padding: 15px 25px; border-bottom: 2px solid var(--hijau-dasar); }
-.card-header h3, .card-header h4 { color: var(--hijau-dasar); font-weight: 800; margin: 0; }
-.card-body { padding: 25px; } .p-0 .card-body { padding: 20px; }
+/* LAYOUT GRIDS */
+.container { max-width: 1100px; margin: 20px auto; padding: 0 20px; }
+.main-grid, .admin-grid { display: grid; gap: 20px; }
+@media(min-width: 768px) { .main-grid { grid-template-columns: 1fr 1fr; } .admin-grid { grid-template-columns: 300px 1fr; } }
+@media(max-width: 768px) { .nav-menu { display: none; } .hamburger-btn { margin-right: 10px; } .nav-brand { font-size: 1rem; } }
+.card { background: var(--putih); border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; }
+.card-header { background: #fafafa; padding: 15px; border-bottom: 2px solid var(--hijau); font-weight: bold; color: var(--hijau); }
+.card-body { padding: 20px; }
 
-.form-group { margin-bottom: 15px; text-align: left; }
-.form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--hijau-dasar); margin-bottom: 5px; }
-input:not(.glass-card input) { width: 100%; padding: 10px; border: 2px solid #ccc; border-radius: 8px; outline: none; }
-input:focus { border-color: var(--hijau-dasar); }
+/* LOGIN GLASSMORPHISM */
+.login-body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(-45deg, #003300, #006600, #b28500, #001a00); background-size: 400% 400%; animation: grad 10s ease infinite; }
+@keyframes grad { 0%{background-position: 0% 50%} 50%{background-position: 100% 50%} 100%{background-position: 0% 50%} }
+.glass-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; color: white; }
+.glass-card h2 { color: var(--emas); } .glass-card input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: none; }
+.btn-login { background: var(--emas); color: var(--hijau); width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-.btn-primary { background: var(--hijau-dasar); color: var(--kuning-emas); padding: 12px; border-radius: var(--radius); font-size: 1rem; font-weight: 700; border: 1px solid var(--kuning-emas); }
-.btn-primary:hover { transform: translateY(-2px); }
-.btn-absen { width: 100%; background: var(--hijau-logo); color: var(--putih-keris); padding: 15px; border-radius: var(--radius); font-size: 1rem; font-weight: 800; border: 2px solid var(--putih-keris); display: flex; justify-content: center; gap: 10px; }
-.btn-absen:hover { background: var(--hijau-dasar); transform: translateY(-2px); }
-.btn-izin { background-color: #F57F17; border-color: #FFB300; } .btn-izin:hover { background-color: #E65100; }
-.btn-qr { background-color: #1976D2; border-color: #64B5F6; } .btn-qr:hover { background-color: #0D47A1; }
-.w-100 { width: 100%; } .mt-1 { margin-top: 10px; } .mt-2 { margin-top: 20px; } .mb-2 { margin-bottom: 20px; }
-
-.alert { padding: 12px 15px; border-radius: 8px; margin-bottom: 15px; font-weight: 700; text-align: center; font-size: 0.9rem;}
-.alert-warning { background-color: #FFF9C4; color: #F57F17; }
-.alert-success { background-color: #E8F5E9; color: var(--hijau-dasar); }
-.alert-danger { background-color: #FFEBEE; color: #D32F2F; }
-
-.kamera-box { background: var(--hitam-teks); border-radius: var(--radius); position: relative; overflow: hidden; min-height: 280px; display: flex; justify-content: center; align-items: center; border: 3px solid var(--hijau-dasar); }
-.kamera-viewfinder { position: absolute; width: 80%; height: 70%; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; }
-.kamera-text { color: rgba(255,255,255,0.5); font-size: 0.9rem; font-weight: 600; letter-spacing: 2px; }
-.watermark { position: absolute; bottom: 15px; left: 15px; color: var(--putih-keris); text-align: left; background: rgba(0, 102, 0, 0.7); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--kuning-emas); }
-.wm-bold { font-weight: 700; color: var(--kuning-emas); }
-.wm-highlight { color: #81C784; font-weight: 600; }
-
-.table-responsive { overflow-x: auto; }
-.table { width: 100%; border-collapse: collapse; white-space: nowrap; }
-.table th, .table td { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; text-align: left; font-size: 0.9rem; }
-.table th { background-color: var(--hijau-dasar); color: var(--kuning-emas); }
-.badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; }
-.badge:contains("Hadir") { background-color: #E8F5E9; color: var(--hijau-dasar); }
-.flex-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-.text-center { text-align: center; } .text-highlight { color: var(--hijau-dasar); }
+/* KOMPONEN */
+.alert { padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-weight: bold; font-size: 0.9rem; }
+.alert-warning { background: #FFF9C4; color: #F57F17; } .alert-success { background: #E8F5E9; color: var(--hijau); } .alert-danger { background: #FFEBEE; color: #D32F2F; }
+.kamera-box { position: relative; background: #000; height: 300px; border-radius: 12px; overflow: hidden; border: 3px solid var(--hijau); }
+.watermark { position: absolute; bottom: 10px; left: 10px; background: rgba(0,102,0,0.7); padding: 5px 10px; border-radius: 5px; color: white; font-size: 0.8rem; text-align: left;}
+.wm-bold { color: var(--emas); font-weight: bold; font-size: 0.9rem;}
+.btn-absen { width: 100%; padding: 12px; background: #2E8B57; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.btn-izin { background: #F57F17; } .mt-1 { margin-top: 10px; } .w-100 { width: 100%; }
+.table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; } .table th, .table td { padding: 10px; border-bottom: 1px solid #ddd; }
+.form-group { margin-bottom: 15px; } .form-group label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; }
+input:not(.glass-card input) { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+.btn-primary { padding: 10px 15px; background: var(--hijau); color: var(--emas); border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
